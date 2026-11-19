@@ -750,9 +750,15 @@ const RelationModalWithContext = ({
 
   const options = data?.results ?? [];
 
+  /**
+   * When the selection changes, the search text is cleared. The search params must be cleared
+   * too, otherwise the list keeps being filtered by the previous text (e.g. the item that was
+   * just selected) and the remaining relations are not shown when the dropdown is reopened.
+   */
   React.useLayoutEffect(() => {
     setTextValue('');
-  }, [fieldValue]);
+    setSearchParams((s) => (s._q === '' ? s : { ...s, _q: '', page: 1 }));
+  }, [fieldValue, setSearchParams]);
 
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
